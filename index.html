@@ -2,140 +2,263 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>H.O.F</title>
+  <title>Hall of Fun</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
       margin: 0;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+    header {
+      font-size: 2em;
       padding: 20px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      grid-auto-rows: 10px; /* small row height for masonry effect */
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      padding: 10px;
     }
-
-    .gallery .item {
+    .topic {
       position: relative;
+      cursor: pointer;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
     }
-
-    .gallery .item img {
+    .topic img {
       width: 100%;
+      height: 250px;
+      object-fit: cover;
       display: block;
     }
-
-    /* JavaScript will adjust row span */
-    .gallery .item:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    /* Captions */
     .caption {
       position: absolute;
-      bottom: 15%;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 12%;
+      left: 0;
+      width: 100%;
+      padding: 8px;
       background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 14px;
       text-align: center;
+      font-size: 14px;
       opacity: 0;
       transition: opacity 0.3s;
-      max-width: 90%;
     }
-
-    .item:hover .caption {
+    .topic:hover .caption {
       opacity: 1;
     }
 
-    /* Fixed bottom caption */
-    .fixed-caption {
+    /* Lightbox overlay */
+    .lightbox {
+      display: none;
       position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 10px 20px;
+      z-index: 2000;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Single back button (top-left) */
+    .back {
+      font-size: 24px;
+      cursor: pointer;
+      color: #fff;
+      padding: 6px 12px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 6px;
+      transition: background 0.2s;
+      align-self: flex-start;
+      margin-bottom: 10px;
+    }
+    .back:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Grid mode inside lightbox */
+    .lightbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .lightbox-grid img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      cursor: pointer;
       border-radius: 8px;
-      font-size: 16px;
-      z-index: 100;
     }
 
-    .fixed-caption a {
-      color: #4CAF50;
+    /* Single image view */
+    .lightbox-single {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .lightbox-single img {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 8px;
+    }
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+    }
+    .controls span {
+      cursor: pointer;
+      font-size: 18px;
+      background: rgba(0,0,0,0.5);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .controls span:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+    }
+    footer a {
+      color: #66ccff;
       text-decoration: none;
-      font-weight: bold;
     }
-
-    .fixed-caption a:hover {
+    footer a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
+  <header>Hall of Fun</header>
 
-<h1>Hall Of  Fun</h1>
-
-<div class="gallery">
-  <div class="item">
-    <img src="https://i.ibb.co/LXQGNSrq/photo-2025-08-27-16-12-54.jpg" alt="Image 1">
-    <div class="caption">hazel niggerberry</div>
+  <!-- Main gallery -->
+  <div class="gallery">
+    <div class="topic" onclick="openLightbox(0)">
+      <img src="https://i.ibb.co/LXQGNSrq/photo-2025-08-27-16-12-54.jpg">
+      <div class="caption">Hazel jada dingleberry</div>
+    </div>
+    <div class="topic" onclick="openLightbox(1)">
+      <img src="https://i.ibb.co/XfLrSkmJ/photo-2025-08-26-03-11-42.jpg">
+      <div class="caption">Javin "NO PANTS" dillons</div>
+    </div>
+    <div class="topic" onclick="openLightbox(2)">
+      <img src="https://i.ibb.co/d4V54Bbg/photo-2025-01-03-22-45-07.jpg">
+      <div class="caption">poodle</div>
+    </div>
   </div>
-  <div class="item">
-    <img src="https://i.ibb.co/9xDsxqj/photo-2025-08-29-18-28-23.jpg" alt="Image 2">
-    <div class="caption">hazel niggerberry 2</div>
-  </div>
-  <div class="item">
-    <img src="https://i.ibb.co/wrwHwX21/image-3.webp" alt="Image 3">
-    <div class="caption">hazel niggerberry 3</div>
-  </div>
-  <div class="item">
-    <img src="https://via.placeholder.com/300x250" alt="Image 4">
-    <div class="caption">Caption 4</div>
-  </div>
-  <!-- Add more items -->
-</div>
 
-<div class="fixed-caption">
-  DM to submit <a href="https://t.me/kiki074" target="_blank">reign</a>
-</div>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="back" id="back-button" onclick="handleBack()">&#8592; Back</span>
 
-<script>
-  // Masonry effect for different heights
-  const galleryItems = document.querySelectorAll('.gallery .item');
-  const rowHeight = parseInt(window.getComputedStyle(document.querySelector('.gallery')).getPropertyValue('grid-auto-rows'));
-  const rowGap = parseInt(window.getComputedStyle(document.querySelector('.gallery')).getPropertyValue('gap'));
+    <div class="lightbox-grid" id="lightbox-grid"></div>
 
-  galleryItems.forEach(item => {
-    const img = item.querySelector('img');
-    img.onload = () => {
-      const rowSpan = Math.ceil((img.getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
-      item.style.gridRowEnd = `span ${rowSpan}`;
-    };
-    // In case image already loaded from cache
-    if (img.complete) {
-      const rowSpan = Math.ceil((img.getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
-      item.style.gridRowEnd = `span ${rowSpan}`;
+    <div class="lightbox-single" id="lightbox-single">
+      <div id="lightbox-content"></div>
+      <div class="controls">
+        <span onclick="prevMedia()">&#10094; Prev</span>
+        <span onclick="nextMedia()">Next &#10095;</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    contact: <a href="https://t.me/kiki074" target="_blank">reign</a> (for posts/removals)
+  </footer>
+  
+
+  <script>
+    const galleries = [
+      [
+        "https://i.ibb.co/LXQGNSrq/photo-2025-08-27-16-12-54.jpg",
+        "https://i.ibb.co/9xDsxqj/photo-2025-08-29-18-28-23.jpg",
+        "https://i.ibb.co/wrwHwX21/image-3.webp",
+		"https://i.ibb.co/xq3gJd8N/IMG-7751.webp"
+      ],
+      [
+        "https://i.ibb.co/2YtGxL2K/photo-2025-08-20-16-19-06.jpg",
+        "https://i.ibb.co/XfLrSkmJ/photo-2025-08-26-03-11-42.jpg",
+        "https://i.ibb.co/0y08BNbt/photo-2025-07-30-17-36-50.jpg"
+      ],
+      [
+        "https://i.ibb.co/b5pk6kZP/photo-2025-08-22-07-41-19.jpg",
+        "https://i.ibb.co/d4V54Bbg/photo-2025-01-03-22-45-07.jpg",
+      ]
+    ];
+
+    let currentGallery = 0;
+    let currentIndex = 0;
+
+    function openLightbox(galleryIndex) {
+      document.getElementById("lightbox").style.display = "flex";
+      currentGallery = galleryIndex;
+      showGrid();
     }
-  });
-</script>
 
+    function handleBack() {
+      const grid = document.getElementById("lightbox-grid");
+      const single = document.getElementById("lightbox-single");
+      if (single.style.display === "flex") {
+        // Single → go back to grid
+        showGrid();
+      } else {
+        // Grid → exit lightbox
+        document.getElementById("lightbox").style.display = "none";
+      }
+    }
+
+    function showGrid() {
+      document.getElementById("lightbox-grid").style.display = "grid";
+      document.getElementById("lightbox-single").style.display = "none";
+      const grid = document.getElementById("lightbox-grid");
+      grid.innerHTML = "";
+      galleries[currentGallery].forEach((src, i) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.onclick = () => openSingle(i);
+        grid.appendChild(img);
+      });
+    }
+
+    function openSingle(index) {
+      document.getElementById("lightbox-grid").style.display = "none";
+      document.getElementById("lightbox-single").style.display = "flex";
+      currentIndex = index;
+      showMedia();
+    }
+
+    function showMedia() {
+      const container = document.getElementById("lightbox-content");
+      container.innerHTML = `<img src="${galleries[currentGallery][currentIndex]}">`;
+    }
+
+    function nextMedia() {
+      currentIndex = (currentIndex + 1) % galleries[currentGallery].length;
+      showMedia();
+    }
+
+    function prevMedia() {
+      currentIndex = (currentIndex - 1 + galleries[currentGallery].length) % galleries[currentGallery].length;
+      showMedia();
+    }
+
+    // Keyboard support
+    document.addEventListener("keydown", e => {
+      const lightbox = document.getElementById("lightbox");
+      if (lightbox.style.display === "flex") {
+        if (e.key === "ArrowRight") nextMedia();
+        if (e.key === "ArrowLeft") prevMedia();
+        if (e.key === "Escape") handleBack();
+      }
+    });
+  </script>
 </body>
 </html>
